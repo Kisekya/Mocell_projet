@@ -1,1 +1,16 @@
 id	TF_family	gen_type
+XBP1	bZIP	TF
+E2F1	E2F	TF
+E2F2	E2F	TF
+E2F8	E2F	TF
+SPDEF	Ets	TF
+FOXA1	Forkhead	TF
+FOXC1	Forkhead	TF
+FOXM1	Forkhead	TF
+GATA3	GATA	TF
+SOX10	HMG/Sox	TF
+MYBL2	Myb/SANT	TF
+ESR1	Nuclear receptor	TF
+AEBP1	Unknown	TF
+CENPA	Unknown	TF
+TP63	p53	TF
