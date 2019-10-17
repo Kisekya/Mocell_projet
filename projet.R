@@ -8,7 +8,7 @@ setwd("~/M2/MOCELL/Mocell_projet")
 data_experimentale=read.table("TCGA_rsem_norm_Nature2012_RNAseq.tab",header=T)
 genes_focus<-read.table("GOI_ids.txt",header=F)
 genes_focus<-as.vector(genes_focus[,1])
-filter_list<-data_experimentale[,"ID"] %in% genes_focus
+filter_list<-data_experimentale[,"ID"] %in% genes_focus  # perte d'informations sur fichiers
 data_focus<-data_experimentale[filter_list,]  # data_focus contient les données d'intérêt
 
 # modifier data_focus pour récupérer les labels des lignes en première colonne
@@ -21,7 +21,7 @@ correlation=cor(data_focus)
 # install.packages("reshape2")
 library("reshape2",lib.loc="~/R/x86_64-pc-linux-gnu-library/3.3/")
 correlation=melt(correlation)
-correlation=correlation[abs(correlation["value"])>0.8,]
+correlation=correlation[abs(correlation["value"])>0.8,]  # perte à cause du filtre !! 
 correlation["Alphabétique"]<-as.character(correlation[,"Var1"])<as.character(correlation[,"Var2"])
 correlation=correlation[correlation[,"Alphabétique"]==TRUE,]
 correlation=correlation[,1:2]
