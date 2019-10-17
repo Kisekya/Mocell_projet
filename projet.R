@@ -21,12 +21,26 @@ correlation=cor(data_focus)
 # install.packages("reshape2")
 library("reshape2",lib.loc="~/R/x86_64-pc-linux-gnu-library/3.3/")
 correlation=melt(correlation)
-correlation=correlation[abs(correlation["value"])>0.8,]  # perte à cause du filtre !! 
+
+corr = correlation[correlation["value"]>0.8,]
+if(length(corr[,1])>0) corr["type"]="correlation_pair"
+anticorr = correlation[correlation["value"]<-0.8,]
+if (length(anticorr[,1])!=0) anticorr["type"]="anticorrelation_pair"
+
+if (length(anticorr[,1])>0 && length(corr)>0) {
+  correlation=rbind(corr,anticorr)
+} else if (length(corr[,1])>0) {
+  correlation=corr
+} else if (length(anticorr[,1])>0) {
+  correlation=anticorr
+} else {
+  correlation=matrix(, nrow = 0, ncol = 3)
+}
+
 correlation["Alphabétique"]<-as.character(correlation[,"Var1"])<as.character(correlation[,"Var2"])
 correlation=correlation[correlation[,"Alphabétique"]==TRUE,]
-correlation=correlation[,1:2]
+correlation=correlation[,c(1,2,4)]
 colnames(correlation)[1:2]=c("id1","id2")
-correlation["type"]="correlation_pair"
 write.table(correlation,"correlation.txt",sep="\t",row.names=F,quote=F)
 
 # donner le type d'interactions à partir des données PPI (Human_STRING_PPI.tab)
@@ -48,3 +62,11 @@ data_TF=read.table("Human_TF_LABEL.tab",header=T,sep="\t")
 filter_list<-data_TF[,"id"] %in% genes_interets
 data_TF<-data_TF[filter_list,]
 write.table(data_TF,"TF.txt",sep="\t",row.names=F,quote=F)
+
+
+
+# filtrer dans PAM50 ceux appartenant dans GOI par True
+data_PAM=read.table("PAM50_geneIDs.txt",header=T)
+filter_list<-data_PAM[,"id"] %in% genes_focus 
+data_PAM["presence"]=filter_list
+write.table(data_PAM,"PAM.txt",sep="\t",row.names=F,quote=F)
